@@ -34,12 +34,33 @@ const GlobeIcon = () => (
 
 function App() {
   const [lang, setLang] = useState('EN');
-  const [page, setPage] = useState('home'); // 'home' | 'style'
+  const [page, setPage] = useState('home'); // 'home' | 'style' | 'capture'
+  const [countdown, setCountdown] = useState(3);
 
   const handleLangSelect = (selectedLang) => {
     setLang(selectedLang);
     setPage('style');
   };
+
+  const handleStartCapture = () => {
+    setPage('capture');
+    setCountdown(3);
+  };
+
+  React.useEffect(() => {
+    let timer;
+    if (page === 'capture' && countdown > 0) {
+      timer = setTimeout(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [page, countdown]);
+
+  // Countdown circle calculations
+  const radius = 45;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - ((3 - countdown) / 3) * circumference;
 
   return (
     <div className="container" style={{ backgroundImage: `url(${bgImg})` }}>
@@ -59,7 +80,7 @@ function App() {
       </div>
 
       {/* Main Content */}
-      {page === 'home' ? (
+      {page === 'home' && (
         <div className="center-content">
           <img src={titleImg} className="title-img" alt="AI Photo Booth" />
 
@@ -75,7 +96,9 @@ function App() {
               </div>
           </div>
         </div>
-      ) : (
+      )}
+
+      {page === 'style' && (
         <div className="style-selection-content">
             <h1 className="style-title">CHOOSE YOUR STYLE</h1>
             <p className="style-subtitle">Select your favorite transformation style</p>
@@ -89,10 +112,64 @@ function App() {
                 <img src={style6} alt="Style 6" />
             </div>
 
-            <button className="take-shot-btn">
+            <button className="take-shot-btn" onClick={handleStartCapture}>
               <span style={{ marginRight: '10px' }}>✨</span> Take a shot now!
             </button>
             
+            <div className="bottom-logo-container">
+               <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />
+               <p className="bottom-logo-text">FUTURISTIC PHOTOS • INSTANT SHARING</p>
+            </div>
+        </div>
+      )}
+
+      {page === 'capture' && (
+        <div className="capture-content">
+            <h1 className="style-title">CAPTURE PHOTO</h1>
+            <p className="style-subtitle">Select your favorite transformation style</p>
+
+            <div className="camera-container">
+                <div className="camera-feed" />
+                
+                {countdown > 0 && (
+                    <div className="countdown-overlay">
+                        <div className="countdown-circle-bg" />
+                        <svg className="countdown-svg" viewBox="0 0 100 100">
+                             {/* Background Ring */}
+                            <circle
+                                stroke="white"
+                                strokeWidth="2"
+                                fill="transparent"
+                                r={radius}
+                                cx="50"
+                                cy="50"
+                                opacity="0.3"
+                            />
+                            {/* Progress Ring */}
+                            <circle
+                                className="progress-ring__circle"
+                                stroke="#f48fb1"
+                                strokeWidth="6"
+                                fill="transparent"
+                                r={radius}
+                                cx="50"
+                                cy="50"
+                                strokeLinecap="round"
+                                style={{ 
+                                    strokeDasharray: `${circumference} ${circumference}`, 
+                                    strokeDashoffset 
+                                }}
+                            />
+                        </svg>
+                        <span className="countdown-text">0{countdown}</span>
+                    </div>
+                )}
+            </div>
+
+            <button className="take-shot-btn">
+              <span style={{ marginRight: '10px' }}>✨</span> Take a shot now!
+            </button>
+
             <div className="bottom-logo-container">
                <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />
                <p className="bottom-logo-text">FUTURISTIC PHOTOS • INSTANT SHARING</p>
