@@ -9,6 +9,14 @@ import imgTopRight from './assets/homepage-top-right.png';
 import imgBottomLeft from './assets/homepage-bottom-left.png';
 import imgBottomRight from './assets/homepage-bottom-right.png';
 
+// Style Images
+import style1 from './assets/home-v4-1.png';
+import style2 from './assets/home-v4-2.png';
+import style3 from './assets/home-v4-3.png';
+import style4 from './assets/home-v4-4.png';
+import style5 from './assets/home-v4-5.png';
+import style6 from './assets/home-v4-6.png';
+
 // Icons
 const HomeIcon = () => (
   <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -26,40 +34,79 @@ const GlobeIcon = () => (
 
 function App() {
   const [lang, setLang] = useState('EN');
+  const [page, setPage] = useState('home'); // 'home' | 'style'
+
+  const handleLangSelect = (selectedLang) => {
+    setLang(selectedLang);
+    setPage('style');
+  };
 
   return (
     <div className="container" style={{ backgroundImage: `url(${bgImg})` }}>
       
-      {/* Top Images */}
-      <img src={imgTopLeft} className="img-pose img-top-left" alt="" />
-      <img src={imgTopRight} className="img-pose img-top-right" alt="" />
+      {/* Top Images - Only on Home */}
+      {page === 'home' && (
+        <>
+          <img src={imgTopLeft} className="img-pose img-top-left" alt="" />
+          <img src={imgTopRight} className="img-pose img-top-right" alt="" />
+        </>
+      )}
 
       <div className="home-btn-container">
-            <button className="home-btn">
+            <button className="home-btn" onClick={() => setPage('home')}>
                 <HomeIcon />
             </button>
       </div>
 
       {/* Main Content */}
-      <div className="center-content">
-        <img src={titleImg} className="title-img" alt="AI Photo Booth" />
+      {page === 'home' ? (
+        <div className="center-content">
+          <img src={titleImg} className="title-img" alt="AI Photo Booth" />
 
-        <div className="lang-section">
-            <div className="lang-header">
-                <GlobeIcon />
-                <span>SELECT LANGUAGE</span>
+          <div className="lang-section">
+              <div className="lang-header">
+                  <GlobeIcon />
+                  <span>SELECT LANGUAGE</span>
+              </div>
+              <div className="lang-buttons">
+                  <button className="lang-btn" onClick={() => handleLangSelect('EN')}>&gt; Eng</button>
+                  <button className="lang-btn" onClick={() => handleLangSelect('TC')}>&gt; 繁體</button>
+                  <button className="lang-btn" onClick={() => handleLangSelect('SC')}>&gt; 简体</button>
+              </div>
+          </div>
+        </div>
+      ) : (
+        <div className="style-selection-content">
+            <h1 className="style-title">CHOOSE YOUR STYLE</h1>
+            <p className="style-subtitle">Select your favorite transformation style</p>
+            
+            <div className="style-grid">
+                <img src={style1} alt="Style 1" />
+                <img src={style2} alt="Style 2" />
+                <img src={style3} alt="Style 3" />
+                <img src={style4} alt="Style 4" />
+                <img src={style5} alt="Style 5" />
+                <img src={style6} alt="Style 6" />
             </div>
-            <div className="lang-buttons">
-                <button className="lang-btn" onClick={() => setLang('EN')}>&gt; Eng</button>
-                <button className="lang-btn" onClick={() => setLang('TC')}>&gt; 繁體</button>
-                <button className="lang-btn" onClick={() => setLang('SC')}>&gt; 简体</button>
+
+            <button className="take-shot-btn">
+              <span style={{ marginRight: '10px' }}>✨</span> Take a shot now!
+            </button>
+            
+            <div className="bottom-logo-container">
+               <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />
+               <p className="bottom-logo-text">FUTURISTIC PHOTOS • INSTANT SHARING</p>
             </div>
         </div>
-      </div>
+      )}
 
-      {/* Bottom Images */}
-      <img src={imgBottomLeft} className="img-pose img-bottom-left" alt="" />
-      <img src={imgBottomRight} className="img-pose img-bottom-right" alt="" />
+      {/* Bottom Images - Only on Home */}
+      {page === 'home' && (
+        <>
+          <img src={imgBottomLeft} className="img-pose img-bottom-left" alt="" />
+          <img src={imgBottomRight} className="img-pose img-bottom-right" alt="" />
+        </>
+      )}
       
     </div>
   )
