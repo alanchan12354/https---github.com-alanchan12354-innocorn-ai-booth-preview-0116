@@ -36,6 +36,7 @@ function App() {
   const [lang, setLang] = useState('EN');
   const [page, setPage] = useState('home'); // 'home' | 'style' | 'capture'
   const [countdown, setCountdown] = useState(3);
+  const videoRef = React.useRef(null);
 
   const handleLangSelect = (selectedLang) => {
     setLang(selectedLang);
@@ -46,6 +47,31 @@ function App() {
     setPage('capture');
     setCountdown(3);
   };
+
+  React.useEffect(() => {
+    let currentStream = null;
+    if (page === 'capture') {
+      const startCamera = async () => {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: 'user' }
+          });
+          currentStream = stream;
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        } catch (err) {
+          console.error("Error accessing camera:", err);
+        }
+      };
+      startCamera();
+    }
+    return () => {
+      if (currentStream) {
+        currentStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [page]);
 
   React.useEffect(() => {
     let timer;
@@ -129,7 +155,13 @@ function App() {
             <p className="style-subtitle">Select your favorite transformation style</p>
 
             <div className="camera-container">
-                <div className="camera-feed" />
+                <video 
+                    ref={videoRef} 
+                    autoPlay 
+                    playsInline 
+                    muted 
+                    className="camera-feed" 
+                />
                 
                 {countdown > 0 && (
                     <div className="countdown-overlay">

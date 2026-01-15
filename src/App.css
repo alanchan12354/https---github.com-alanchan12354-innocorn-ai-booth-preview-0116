@@ -259,8 +259,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    background: url('./assets/home-v4-1.png') center/cover no-repeat; /* Fallback/Demo */
-    filter: brightness(0.8);
+    background: #000;
 }
 
 .countdown-overlay {
