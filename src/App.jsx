@@ -3,7 +3,7 @@ import './App.css'
 
 // Images
 import bgImg from './assets/bg.png';
-import titleImg from './assets/ai-photo-booth.png';
+import titleImg from './assets/ai-photo-booth-text-logo.png';
 import imgTopLeft from './assets/homepage-top-left.png';
 import imgTopRight from './assets/homepage-top-right.png';
 import imgBottomLeft from './assets/homepage-bottom-left.png';
