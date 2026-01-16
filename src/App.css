@@ -446,3 +446,11 @@
   cursor: grabbing;
   opacity: 0.8;
 }
+
+/* Selected Style State */
+.style-grid img.selected {
+    border-color: #4A3728;
+    transform: scale(1.05);
+    box-shadow: 0 2vw 4vw rgba(74, 55, 40, 0.3);
+    transition: all 0.2s ease;
+}

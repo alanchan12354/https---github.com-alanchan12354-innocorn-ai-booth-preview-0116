@@ -52,6 +52,7 @@ function App() {
   const [decorationTab, setDecorationTab] = useState('stickers'); // 'stickers' | 'frames'
   const [stickers, setStickers] = useState([]);
   const [draggedSticker, setDraggedSticker] = useState(null);
+  const [selectedStyle, setSelectedStyle] = useState(null);
   const videoRef = React.useRef(null);
   const photoContainerRef = React.useRef(null);
 
@@ -298,15 +299,29 @@ function App() {
             <p className="style-subtitle">Select your favorite transformation style</p>
             
             <div className="style-grid">
-                <img src={style1} alt="Style 1" />
-                <img src={style2} alt="Style 2" />
-                <img src={style3} alt="Style 3" />
-                <img src={style4} alt="Style 4" />
-                <img src={style5} alt="Style 5" />
-                <img src={style6} alt="Style 6" />
+                {[
+                  { id: 1, src: style1 },
+                  { id: 2, src: style2 },
+                  { id: 3, src: style3 },
+                  { id: 4, src: style4 },
+                  { id: 5, src: style5 },
+                  { id: 6, src: style6 },
+                ].map((style) => (
+                  <img 
+                    key={style.id}
+                    src={style.src} 
+                    alt={`Style ${style.id}`}
+                    className={selectedStyle === style.id ? 'selected' : ''}
+                    onClick={() => setSelectedStyle(style.id)}
+                  />
+                ))}
             </div>
 
-            <button className="take-shot-btn" onClick={handleStartCapture}>
+            <button 
+              className="take-shot-btn" 
+              onClick={handleStartCapture}
+              style={{ opacity: selectedStyle ? 1 : 0.5, pointerEvents: selectedStyle ? 'auto' : 'none' }}
+            >
               <span style={{ marginRight: '10px' }}>✨</span> Take a shot now!
             </button>
             
