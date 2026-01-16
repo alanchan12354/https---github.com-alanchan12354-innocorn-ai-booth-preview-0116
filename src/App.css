@@ -305,3 +305,47 @@
     transition: stroke-dashoffset 1s linear;
     transform-origin: 50% 50%;
 }
+
+/* Review Buttons */
+.review-buttons {
+    display: flex;
+    gap: 3vw;
+    width: 100%;
+    margin-bottom: 2vh;
+}
+
+.retake-btn {
+    flex: 1;
+    font-size: 4.5vw;
+    padding: 3vw;
+    border-radius: 2vw;
+    background: white;
+    color: #4A3728;
+    border: 0.3vw solid #4A3728;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 1vw 2vw rgba(0,0,0,0.1);
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+}
+
+.done-btn {
+    flex: 1;
+    font-size: 4.5vw;
+    padding: 3vw;
+    border-radius: 2vw;
+    background: linear-gradient(90deg, #8B6E57 0%, #634F3F 100%);
+    color: white;
+    border: none;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 1vw 2vw rgba(0,0,0,0.25);
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2vw;
+}

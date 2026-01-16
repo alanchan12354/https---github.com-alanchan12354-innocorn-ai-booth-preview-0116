@@ -50,6 +50,11 @@ function App() {
     setCapturedImage(null);
   };
 
+  const handleRetake = () => {
+    setCapturedImage(null);
+    setCountdown(3);
+  };
+
   React.useEffect(() => {
     let currentStream = null;
     if (page === 'capture' && !capturedImage) {
@@ -162,7 +167,7 @@ function App() {
 
       {page === 'capture' && (
         <div className="capture-content">
-            <h1 className="style-title">CAPTURE PHOTO</h1>
+            <h1 className="style-title">{capturedImage ? "REVIEW PHOTO" : "CAPTURE PHOTO"}</h1>
             <p className="style-subtitle">Select your favorite transformation style</p>
 
             <div className="camera-container">
@@ -213,9 +218,20 @@ function App() {
                 )}
             </div>
 
-            <button className="take-shot-btn">
-              <span style={{ marginRight: '10px' }}>✨</span> Take a shot now!
-            </button>
+            {!capturedImage ? (
+                <button className="take-shot-btn">
+                  <span style={{ marginRight: '10px' }}>✨</span> Take a shot now!
+                </button>
+            ) : (
+                <div className="review-buttons">
+                    <button className="retake-btn" onClick={handleRetake}>
+                         RETAKE ↻
+                    </button>
+                    <button className="done-btn">
+                         DONE ✨
+                    </button>
+                </div>
+            )}
 
             <div className="bottom-logo-container">
                <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />
