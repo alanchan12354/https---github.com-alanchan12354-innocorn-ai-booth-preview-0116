@@ -36,6 +36,7 @@ function App() {
   const [lang, setLang] = useState('EN');
   const [page, setPage] = useState('home'); // 'home' | 'style' | 'capture'
   const [countdown, setCountdown] = useState(3);
+  const [capturedImage, setCapturedImage] = useState(null);
   const videoRef = React.useRef(null);
 
   const handleLangSelect = (selectedLang) => {
@@ -46,11 +47,12 @@ function App() {
   const handleStartCapture = () => {
     setPage('capture');
     setCountdown(3);
+    setCapturedImage(null);
   };
 
   React.useEffect(() => {
     let currentStream = null;
-    if (page === 'capture') {
+    if (page === 'capture' && !capturedImage) {
       const startCamera = async () => {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({
@@ -71,7 +73,7 @@ function App() {
         currentStream.getTracks().forEach(track => track.stop());
       }
     };
-  }, [page]);
+  }, [page, capturedImage]);
 
   React.useEffect(() => {
     let timer;
@@ -79,9 +81,18 @@ function App() {
       timer = setTimeout(() => {
         setCountdown((prev) => prev - 1);
       }, 1000);
+    } else if (page === 'capture' && countdown === 0 && !capturedImage) {
+      const video = videoRef.current;
+      if (video) {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        setCapturedImage(canvas.toDataURL('image/png'));
+      }
     }
     return () => clearTimeout(timer);
-  }, [page, countdown]);
+  }, [page, countdown, capturedImage]);
 
   // Countdown circle calculations
   const radius = 45;
@@ -155,15 +166,19 @@ function App() {
             <p className="style-subtitle">Select your favorite transformation style</p>
 
             <div className="camera-container">
-                <video 
-                    ref={videoRef} 
-                    autoPlay 
-                    playsInline 
-                    muted 
-                    className="camera-feed" 
-                />
+                {!capturedImage ? (
+                    <video 
+                        ref={videoRef} 
+                        autoPlay 
+                        playsInline 
+                        muted 
+                        className="camera-feed" 
+                    />
+                ) : (
+                    <img src={capturedImage} className="camera-feed" alt="Captured" />
+                )}
                 
-                {countdown > 0 && (
+                {countdown > 0 && !capturedImage && (
                     <div className="countdown-overlay">
                         <div className="countdown-circle-bg" />
                         <svg className="countdown-svg" viewBox="0 0 100 100">
