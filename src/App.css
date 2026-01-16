@@ -145,7 +145,7 @@
     margin-top: 0;
     height: 100vh;
     justify-content: flex-start;
-    padding-top: 4vh;
+    padding-top: 2vh;
     position: relative;
     z-index: 20;
 }
@@ -164,17 +164,17 @@
     font-size: 3.5vw;
     color: #4A3728;
     font-weight: 600;
-    margin-bottom: 2vh;
+    margin-bottom: 1.5vh;
     text-align: center;
 }
 
 .style-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3vw;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2vw;
     width: 100%;
     max-width: 90vw;
-    margin-bottom: 3vh;
+    margin-bottom: 2vh;
 }
 
 .style-grid img {
