@@ -17,6 +17,9 @@ import style4 from './assets/home-v4-4.png';
 import style5 from './assets/home-v4-5.png';
 import style6 from './assets/home-v4-6.png';
 
+// Decoration Assets
+import animatedAvatar from './assets/animated-demo-avator.png';
+
 // Icons
 const HomeIcon = () => (
   <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -32,12 +35,25 @@ const GlobeIcon = () => (
    </svg>
 );
 
+const STICKERS = [
+  { id: 1, emoji: '🎁' },
+  { id: 2, emoji: '🧃' },
+  { id: 3, emoji: '🌮' },
+  { id: 4, emoji: '🍦' },
+  { id: 5, emoji: '🏢' },
+];
+
 function App() {
   const [lang, setLang] = useState('EN');
-  const [page, setPage] = useState('home'); // 'home' | 'style' | 'capture'
+  const [page, setPage] = useState('home'); // 'home' | 'style' | 'capture' | 'generating' | 'decoration'
   const [countdown, setCountdown] = useState(3);
   const [capturedImage, setCapturedImage] = useState(null);
+  const [generationProgress, setGenerationProgress] = useState(0);
+  const [decorationTab, setDecorationTab] = useState('stickers'); // 'stickers' | 'frames'
+  const [stickers, setStickers] = useState([]);
+  const [draggedSticker, setDraggedSticker] = useState(null);
   const videoRef = React.useRef(null);
+  const photoContainerRef = React.useRef(null);
 
   const handleLangSelect = (selectedLang) => {
     setLang(selectedLang);
@@ -53,6 +69,11 @@ function App() {
   const handleRetake = () => {
     setCapturedImage(null);
     setCountdown(3);
+  };
+
+  const handleDone = () => {
+    setPage('generating');
+    setGenerationProgress(0);
   };
 
   React.useEffect(() => {
@@ -99,13 +120,144 @@ function App() {
     return () => clearTimeout(timer);
   }, [page, countdown, capturedImage]);
 
+  React.useEffect(() => {
+    let progressTimer;
+    if (page === 'generating') {
+      progressTimer = setInterval(() => {
+        setGenerationProgress((prev) => {
+          if (prev >= 99) {
+            clearInterval(progressTimer);
+            return 99;
+          }
+          return prev + Math.random() * 30;
+        });
+      }, 500);
+    }
+    return () => clearInterval(progressTimer);
+  }, [page]);
+
+  React.useEffect(() => {
+    let timer;
+    if (page === 'generating' && generationProgress >= 99) {
+      timer = setTimeout(() => {
+        setPage('decoration');
+        setStickers([]);
+      }, 3000);
+    }
+    return () => clearTimeout(timer);
+  }, [page, generationProgress]);
+
+  const handleAddSticker = (sticker) => {
+    const newSticker = {
+      ...sticker,
+      x: 50,
+      y: 50,
+      id: Date.now(),
+    };
+    setStickers([...stickers, newSticker]);
+    setDraggedSticker(newSticker.id);
+  };
+
+  const handlePhotoContainerDrop = (e) => {
+    e.preventDefault();
+    if (!draggedSticker || !photoContainerRef.current) return;
+
+    const rect = photoContainerRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // Check if we are dragging a new sticker from palette (ID is small number)
+    const catalogSticker = STICKERS.find(s => s.id === draggedSticker);
+    
+    if (catalogSticker) {
+      // Create new sticker instance
+      const newSticker = {
+        ...catalogSticker,
+        x: Math.max(0, Math.min(x - 25, rect.width - 50)),
+        y: Math.max(0, Math.min(y - 25, rect.height - 50)),
+        id: Date.now(),
+      };
+      setStickers((prev) => [...prev, newSticker]);
+    } else {
+      // Moving existing sticker (if draggable was enabled for them, but currently they use onMouseDown)
+      // This branch might be reached if we enabled native drag for existing stickers.
+      setStickers((prev) =>
+        prev.map((s) =>
+          s.id === draggedSticker
+            ? { ...s, x: Math.max(0, Math.min(x - 40, rect.width - 80)), y: Math.max(0, Math.min(y - 40, rect.height - 80)) }
+            : s
+        )
+      );
+    }
+    setDraggedSticker(null);
+  };
+
+  React.useEffect(() => {
+    if (!draggedSticker) return;
+    if (draggedSticker < 1000) return;
+
+    const handleWindowMouseMove = (e) => {
+        if (!photoContainerRef.current) return;
+        const rect = photoContainerRef.current.getBoundingClientRect();
+        
+        let clientX = e.clientX;
+        let clientY = e.clientY;
+
+        // Touch support
+        if (e.touches && e.touches[0]) {
+           clientX = e.touches[0].clientX;
+           clientY = e.touches[0].clientY;
+        }
+
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+
+        setStickers((prev) =>
+          prev.map((s) => {
+            if (s.id === draggedSticker) {
+                 return { 
+                     ...s, 
+                     x: Math.min(Math.max(x - 40, -40), rect.width - 40), 
+                     y: Math.min(Math.max(y - 40, -40), rect.height - 40)
+                 };
+            }
+            return s;
+          })
+        );
+    };
+
+    const handleWindowMouseUp = () => {
+        setDraggedSticker(null);
+    };
+
+    window.addEventListener('mousemove', handleWindowMouseMove);
+    window.addEventListener('mouseup', handleWindowMouseUp);
+    window.addEventListener('touchmove', handleWindowMouseMove, { passive: false });
+    window.addEventListener('touchend', handleWindowMouseUp);
+
+    return () => {
+        window.removeEventListener('mousemove', handleWindowMouseMove);
+        window.removeEventListener('mouseup', handleWindowMouseUp);
+        window.removeEventListener('touchmove', handleWindowMouseMove);
+        window.removeEventListener('touchend', handleWindowMouseUp);
+    };
+  }, [draggedSticker]);
+
+  const handleMouseUp = () => {
+    setDraggedSticker(null);
+  };
+
+
   // Countdown circle calculations
   const radius = 45;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - ((3 - countdown) / 3) * circumference;
 
   return (
-    <div className="container" style={{ backgroundImage: `url(${bgImg})` }}>
+    <div
+      className="container"
+      style={{ backgroundImage: `url(${bgImg})` }}
+    >
       
       {/* Top Images - Only on Home */}
       {page === 'home' && (
@@ -227,11 +379,125 @@ function App() {
                     <button className="retake-btn" onClick={handleRetake}>
                          RETAKE ↻
                     </button>
-                    <button className="done-btn">
+                    <button className="done-btn" onClick={handleDone}>
                          DONE ✨
                     </button>
                 </div>
             )}
+
+            <div className="bottom-logo-container">
+               <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />
+               <p className="bottom-logo-text">FUTURISTIC PHOTOS • INSTANT SHARING</p>
+            </div>
+        </div>
+      )}
+
+      {page === 'generating' && (
+        <div className="capture-content">
+            <h1 className="style-title">GENERATING</h1>
+            <p className="style-subtitle">Transforming your photo style</p>
+
+            <div className="camera-container">
+                <img src={capturedImage} className="camera-feed" alt="Captured" />
+                <div className="processing-shimmer" />
+                
+                <div className="generating-overlay">
+                    <div className="loading-spinner" />
+                    <div className="progress-bar-container">
+                        <div className="progress-bar" style={{ width: `${generationProgress}%` }} />
+                    </div>
+                    <div className="progress-text">{Math.round(generationProgress)}%</div>
+                </div>
+            </div>
+
+            <div className="bottom-logo-container">
+               <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />
+               <p className="bottom-logo-text">FUTURISTIC PHOTOS • INSTANT SHARING</p>
+            </div>
+        </div>
+      )}
+
+      {page === 'decoration' && (
+        <div className="capture-content">
+            <h1 className="style-title">DECORATION</h1>
+            
+            <div className="decoration-tabs">
+                <button 
+                  className={`tab-btn ${decorationTab === 'stickers' ? 'active' : ''}`}
+                  onClick={() => setDecorationTab('stickers')}
+                >
+                  STICKERS
+                </button>
+                <button 
+                  className={`tab-btn ${decorationTab === 'frames' ? 'active' : ''}`}
+                  onClick={() => setDecorationTab('frames')}
+                >
+                  FRAMES
+                </button>
+            </div>
+
+            {decorationTab === 'stickers' && (
+              <div className="stickers-grid">
+                {STICKERS.map((sticker) => (
+                  <div
+                    key={sticker.id}
+                    className="sticker-item"
+                    draggable
+                    onDragStart={() => setDraggedSticker(sticker.id)}
+                    onDragEnd={() => setDraggedSticker(null)}
+                    onClick={() => handleAddSticker(sticker)}
+                    style={{ cursor: 'grab' }}
+                  >
+                    {sticker.emoji}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div 
+              className="camera-container"
+              ref={photoContainerRef}
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handlePhotoContainerDrop}
+              style={{ position: 'relative' }}
+            >
+                <img src={animatedAvatar} className="camera-feed" alt="Decorated" />
+                
+                {stickers.map((sticker) => (
+                  <div
+                    key={sticker.id}
+                    className={`sticker-on-photo ${draggedSticker === sticker.id ? 'dragging' : ''}`}
+                    style={{
+                      position: 'absolute',
+                      left: `${sticker.x}px`,
+                      top: `${sticker.y}px`,
+                      cursor: draggedSticker === sticker.id ? 'grabbing' : 'grab',
+                      userSelect: 'none',
+                    }}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setDraggedSticker(sticker.id);
+                    }}
+                    onTouchStart={(e) => {
+                      // Prevent scrolling while dragging
+                      e.stopPropagation();
+                      setDraggedSticker(sticker.id);
+                    }}
+                  >
+                    {sticker.emoji}
+                  </div>
+                ))}
+            </div>
+
+            <div className="review-buttons">
+                <button className="retake-btn" onClick={() => setPage('style')}>
+                     RETAKE ↻
+                </button>
+                <button className="done-btn">
+                     DONE ✨
+                </button>
+            </div>
 
             <div className="bottom-logo-container">
                <img src={titleImg} className="bottom-logo" alt="AI Photo Booth" />

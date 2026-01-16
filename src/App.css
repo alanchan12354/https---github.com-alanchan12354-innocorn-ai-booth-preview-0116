@@ -349,3 +349,100 @@
     justify-content: center;
     gap: 2vw;
 }
+
+/* Processing Shimmer Animation */
+.processing-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.2) 30%,
+        rgba(255, 255, 255, 0.4) 50%,
+        rgba(255, 255, 255, 0.2) 70%,
+        transparent 100%
+    );
+    animation: shimmer 2s infinite;
+    z-index: 2;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Decoration Page Styles */
+.decoration-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  margin-bottom: 2vh;
+  width: 100%;
+}
+
+.tab-btn {
+  padding: 2vw 4vw;
+  border-radius: 2vw;
+  background: transparent;
+  border: 0.2vw solid #4A3728;
+  color: #4A3728;
+  font-size: 3.5vw;
+  font-weight: 700;
+  cursor: pointer;
+  flex: 1;
+  max-width: 40%;
+  transition: all 0.2s;
+}
+
+.tab-btn.active {
+  background: #4A3728;
+  color: white;
+}
+
+.stickers-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3vw;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 2vh;
+  padding: 1vh 0;
+  min-height: 10vh;
+}
+
+.sticker-item {
+  font-size: 8vw;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.1s;
+  background: rgba(255,255,255,0.5);
+  border-radius: 2vw;
+  width: 12vw;
+  height: 12vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sticker-item:active {
+  cursor: grabbing;
+  transform: scale(1.1);
+}
+
+.sticker-on-photo {
+  font-size: 15vw;
+  z-index: 10;
+  line-height: 1;
+}
+
+.sticker-on-photo.dragging {
+  cursor: grabbing;
+  opacity: 0.8;
+}
