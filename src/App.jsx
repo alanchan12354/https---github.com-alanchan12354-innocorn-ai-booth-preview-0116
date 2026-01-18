@@ -433,7 +433,7 @@ function App() {
       )}
 
       {page === 'decoration' && (
-        <div className="capture-content">
+        <div className="capture-content decoration-page">
             <h1 className="style-title">DECORATION</h1>
             
             <div className="decoration-tabs">

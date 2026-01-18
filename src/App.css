@@ -235,21 +235,21 @@
     flex-direction: column;
     align-items: center;
     width: 90%;
-    margin-top: 5vh;
+    margin-top: 0;
     height: 100vh;
     justify-content: flex-start;
-    padding-top: 8vh;
+    padding-top: 2vh;
     position: relative;
     z-index: 20;
 }
 
 .camera-container {
     width: 100%;
-    max-width: 90vw;
+    max-width: 80vw;
     aspect-ratio: 3/4;
     background-color: #333;
     border-radius: 4vw;
-    margin-bottom: 3vh;
+    margin-bottom: 2vh;
     position: relative;
     overflow: hidden;
     box-shadow: 0 2vw 4vw rgba(0,0,0,0.3);
@@ -383,7 +383,7 @@
   display: flex;
   justify-content: center;
   gap: 2vw;
-  margin-bottom: 2vh;
+  margin-bottom: 1vh;
   width: 100%;
 }
 
@@ -409,12 +409,12 @@
 .stickers-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 3vw;
+  gap: 2vw;
   justify-content: center;
   width: 100%;
-  margin-bottom: 2vh;
-  padding: 1vh 0;
-  min-height: 10vh;
+  margin-bottom: 1vh;
+  padding: 0.5vh 0;
+  min-height: 8vh;
 }
 
 .sticker-item {
@@ -453,4 +453,29 @@
     transform: scale(1.05);
     box-shadow: 0 2vw 4vw rgba(74, 55, 40, 0.3);
     transition: all 0.2s ease;
+}
+
+/* Decoration Page Layout Adjustments */
+.decoration-page .camera-container {
+    max-width: 60vw; /* Smaller than capture page to fit upper 2/3 */
+    margin-bottom: 2vh;
+}
+
+.decoration-page .stickers-grid {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    /* Hide scrollbar for cleaner look */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+.decoration-page .stickers-grid::-webkit-scrollbar {
+    display: none;
+}
+
+.decoration-page .sticker-item {
+    flex: 0 0 auto; /* Do not shrink/grow */
+    margin-right: 2vw;
 }
