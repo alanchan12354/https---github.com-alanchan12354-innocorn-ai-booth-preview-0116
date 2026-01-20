@@ -113,7 +113,7 @@
     margin-top: 0;
     height: 100vh;
     justify-content: flex-start;
-    padding-top: 2vh;
+    padding-top: 3vh;
     position: relative;
     z-index: 20;
 }
@@ -122,7 +122,7 @@
     font-size: 8vw;
     font-weight: 900;
     color: #4A3728;
-    margin-bottom: 0.5vh;
+    margin-bottom: 1vh;
     margin-top: 0;
     text-transform: uppercase;
     text-align: center;
@@ -132,17 +132,17 @@
     font-size: 3.5vw;
     color: #4A3728;
     font-weight: 600;
-    margin-bottom: 1.5vh;
+    margin-bottom: 2vh;
     text-align: center;
 }
 
 .style-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 2vw;
     width: 100%;
-    max-width: 90vw;
-    margin-bottom: 2vh;
+    max-width: 65vw;
+    margin-bottom: 3vh;
 }
 
 .style-grid img {
