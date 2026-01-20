@@ -2,12 +2,8 @@ import React, { useState } from 'react'
 import './App.css'
 
 // Images
-import bgImg from './assets/bg.png';
 import titleImg from './assets/ai-photo-booth-text-logo.png';
-import imgTopLeft from './assets/homepage-top-left.png';
-import imgTopRight from './assets/homepage-top-right.png';
-import imgBottomLeft from './assets/homepage-bottom-left.png';
-import imgBottomRight from './assets/homepage-bottom-right.png';
+import bgVideo from './assets/homepage-bg.mp4';
 
 // Style Images
 import style1 from './assets/home-v4-1.png';
@@ -255,18 +251,11 @@ function App() {
   const strokeDashoffset = circumference - ((3 - countdown) / 3) * circumference;
 
   return (
-    <div
-      className="container"
-      style={{ backgroundImage: `url(${bgImg})` }}
-    >
-      
-      {/* Top Images - Only on Home */}
-      {page === 'home' && (
-        <>
-          <img src={imgTopLeft} className="img-pose img-top-left" alt="" />
-          <img src={imgTopRight} className="img-pose img-top-right" alt="" />
-        </>
-      )}
+    <div className="container">
+      {/* Background Video */}
+      <video className="bg-video" autoPlay loop muted playsInline>
+        <source src={bgVideo} type="video/mp4" />
+      </video>
 
       <div className="home-btn-container">
             <button className="home-btn" onClick={() => setPage('home')}>
@@ -519,14 +508,6 @@ function App() {
                <p className="bottom-logo-text">FUTURISTIC PHOTOS • INSTANT SHARING</p>
             </div>
         </div>
-      )}
-
-      {/* Bottom Images - Only on Home */}
-      {page === 'home' && (
-        <>
-          <img src={imgBottomLeft} className="img-pose img-bottom-left" alt="" />
-          <img src={imgBottomRight} className="img-pose img-bottom-right" alt="" />
-        </>
       )}
       
     </div>

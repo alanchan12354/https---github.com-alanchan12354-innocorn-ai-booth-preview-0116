@@ -104,38 +104,6 @@
     filter: brightness(1.1);
 }
 
-/* Images positioning */
-.img-pose {
-    position: absolute;
-    object-fit: contain;
-}
-
-/* Assuming the images are appropriately sized cuts */
-.img-top-left {
-    top: 0;
-    left: 0;
-    width: 45%;
-    transform: none;
-}
-.img-top-right {
-    top: 0;
-    right: 0;
-    width: 40%;
-    transform: none;
-}
-.img-bottom-left {
-    bottom: 0;
-    left: 0;
-    width: 48%;
-    transform: none;
-}
-.img-bottom-right {
-    bottom: 0;
-    right: 0;
-    width: 45%;
-    transform: none;
-}
-
 /* Style Selection Page */
 .style-selection-content {
     display: flex;
@@ -478,4 +446,16 @@
 .decoration-page .sticker-item {
     flex: 0 0 auto; /* Do not shrink/grow */
     margin-right: 2vw;
+}
+
+/* Background Video */
+.bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 1; /* Behind content but above background */
+    pointer-events: none;
 }
